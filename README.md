@@ -24,7 +24,7 @@ for the automated checks and the hardware acceptance procedure.
 | Background ranging | Outside this MVP; disconnects and resumes in foreground |
 
 Compatibility target: React Native 0.83.x (baseline 0.83.1), React 19.2.x,
-Expo SDK 55 (baseline 55.0.0), iOS 15.1+. Other versions are not claimed by this
+Expo SDK 55 (baseline 55.0.0), iOS 15.1+, Xcode 26.2+ for Expo builds. Other versions are not claimed by this
 beta. Hardware support is checked at runtime; simulators cannot provide physical
 UWB measurements.
 
