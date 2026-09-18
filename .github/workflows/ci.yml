@@ -46,9 +46,10 @@ jobs:
           working-directory: example
           bundler-cache: true
       - name: Install consumer pods
+        working-directory: build/consumers/${{ matrix.consumer }}/ios
         env:
           BUNDLE_GEMFILE: ${{ github.workspace }}/example/Gemfile
-        run: bundle exec pod install --project-directory=build/consumers/${{ matrix.consumer }}/ios
+        run: bundle exec pod install
       - name: Compile tarball consumer for iOS simulator
         run: |
           cd build/consumers/${{ matrix.consumer }}

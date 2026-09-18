@@ -28,8 +28,9 @@ The GitHub organization and npm organization are separate. Use an npm account
 with publish rights in the `su-engineering` npm organization and enable 2FA.
 No npm token is stored in this repository.
 
-If this is the first publication, create the package using an authenticated
-maintainer account after the repository is public and the candidate is reviewed:
+Trusted publishing requires the package to exist on npm. For the first publication,
+create it using an authenticated maintainer account after the repository is public
+and the candidate is reviewed:
 
 ```sh
 npm login
@@ -45,12 +46,18 @@ Then configure **Trusted Publisher** in the package's npm settings:
 | Repository | `react-native-nearby-interaction` |
 | Workflow filename | `publish.yml` |
 | Environment | Leave empty; workflow does not use a GitHub environment |
+| Allowed actions | Enable direct `npm publish` |
 
-If npm supports setting up this package's trusted publisher before first
-publication, configure it first and use the workflow instead. The workflow is
-manual, waits for all automated checks, verifies the exact version and tarball
+With npm 11.15+, the equivalent authenticated CLI setup is:
+
+```sh
+npm trust github @su-engineering/react-native-nearby-interaction --file publish.yml --repo su-engineering/react-native-nearby-interaction --allow-publish
+```
+
+The workflow is manual, waits for all automated checks, verifies the version and tarball
 integrity, checks that the repository is public and the npm version is absent,
-then publishes with OIDC/provenance and creates the matching Git tag.
+then publishes with OIDC/provenance, creates the matching Git tag and publishes
+the matching GitHub prerelease with the verified archive and checksum.
 
 Do not run the automated publication for a version already manually published.
 For that bootstrap version, verify the registry artifact before creating/pushing
@@ -70,4 +77,5 @@ for subsequent releases. The podspec source tag tracks `v<package version>`.
 References:
 
 - [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/)
+- [npm trust prerequisites and setup](https://docs.npmjs.com/cli/v11/commands/npm-trust/)
 - [npm publish and dist-tags](https://docs.npmjs.com/cli/v11/commands/npm-publish/)

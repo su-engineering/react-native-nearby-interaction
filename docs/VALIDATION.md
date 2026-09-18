@@ -12,13 +12,19 @@
 - Production iOS JavaScript bundle through Metro.
 - npm package dry run: native files, generated JavaScript/types, codegen source,
   plugin and documentation are included; the wallet and test app are excluded.
+- Verified actual beta tarball installation in fresh React Native 0.83.1 and
+  Expo SDK 55.0.0 consumers (not symlinks), including native autolinking/codegen,
+  Expo prebuild/usage descriptions, and production bundles.
 
 ## Required on macOS
 
-The Linux development host has no Swift/Xcode toolchain. Native compilation,
-Swift protocol tests and device behavior remain unverified. The committed CI
-workflow runs `swift test`, installs the example pods and builds the iOS simulator
-target on macOS. A simulator build verifies linking/compilation, not UWB behavior.
+The Linux development host has no Swift/Xcode toolchain. Four Swift protocol tests
+passed in macOS CI. The first native adapter build exposed a missing Nearby
+Interaction header import, which has been corrected. The release CI workflow
+compiles fresh React Native and Expo tarball consumers on macOS; check the
+candidate commit's CI result for the native build outcome. Physical device
+behavior remains unverified. A simulator build verifies linking/compilation,
+not UWB behavior.
 
 ```sh
 swift test

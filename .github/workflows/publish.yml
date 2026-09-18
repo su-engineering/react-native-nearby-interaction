@@ -37,4 +37,5 @@ jobs:
         env:
           EXPECTED_VERSION: ${{ inputs.version }}
           REPOSITORY_PRIVATE: ${{ github.event.repository.private }}
+          GH_TOKEN: ${{ github.token }}
         run: node scripts/publish.cjs
