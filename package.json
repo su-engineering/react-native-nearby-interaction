@@ -1,0 +1,75 @@
+{
+  "name": "react-native-nearby-interaction",
+  "version": "0.1.0",
+  "description": "iOS UWB accessory ranging for React Native, with a T-TAG BLE profile and external transports",
+  "license": "UNLICENSED",
+  "repository": {"type": "git", "url": "git+https://github.com/su-engineering/react-native-nearby-interaction.git"},
+  "homepage": "https://github.com/su-engineering/react-native-nearby-interaction#readme",
+  "bugs": {"url": "https://github.com/su-engineering/react-native-nearby-interaction/issues"},
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "react-native": "src/index.ts",
+  "source": "src/index.ts",
+  "files": [
+    "src",
+    "lib",
+    "ios",
+    "plugin",
+    "app.plugin.js",
+    "react-native.config.js",
+    "NearbyInteractionKit.podspec",
+    "README.md",
+    "docs"
+  ],
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "react-native": "./src/index.ts",
+      "default": "./lib/index.js"
+    },
+    "./app.plugin.js": "./app.plugin.js",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx tests/run.ts",
+    "codegen": "node scripts/codegen.cjs",
+    "check": "npm run typecheck && npm test && npm run build && npm run codegen",
+    "prepack": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=19.0.0",
+    "react-native": ">=0.83.0",
+    "@expo/config-plugins": ">=10.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@expo/config-plugins": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@expo/config-plugins": "~10.1.2",
+    "@types/react": "^19.2.0",
+    "@types/node": "^22.0.0",
+    "react": "19.2.0",
+    "react-native": "0.83.1",
+    "tsx": "^4.20.0",
+    "typescript": "~5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.4"
+  },
+  "codegenConfig": {
+    "name": "NearbyInteractionSpec",
+    "type": "modules",
+    "jsSrcsDir": "src/specs",
+    "ios": {
+      "modules": {
+        "NearbyInteraction": {
+          "className": "RNNearbyInteraction"
+        }
+      }
+    }
+  }
+}

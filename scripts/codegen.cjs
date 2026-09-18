@@ -1,0 +1,10 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const {execFileSync} = require('node:child_process');
+const root = path.resolve(__dirname, '..');
+const codegenRoot = path.dirname(require.resolve('@react-native/codegen/package.json'));
+fs.mkdirSync(path.join(root, 'build'), {recursive: true});
+execFileSync(process.execPath, [path.join(codegenRoot, 'lib/cli/combine/combine-js-to-schema-cli.js'), path.join(root, 'build/schema.json'), path.join(root, 'src/specs')], {stdio: 'inherit'});
+const rnRoot = path.dirname(require.resolve('react-native/package.json'));
+execFileSync(process.execPath, [path.join(rnRoot, 'scripts/generate-specs-cli.js'), '--platform', 'ios', '--schemaPath', path.join(root, 'build/schema.json'), '--outputDir', path.join(root, 'build/codegen'), '--libraryName', 'NearbyInteractionSpec', '--libraryType', 'modules'], {stdio: 'inherit'});
+console.log('iOS TurboModule schema and bindings generated in build/codegen');

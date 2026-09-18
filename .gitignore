@@ -1,0 +1,9 @@
+node_modules/
+lib/
+build/
+*.tgz
+example/ios/Pods/
+example/ios/build/
+.DS_Store
+.build/
+.swiftpm/
