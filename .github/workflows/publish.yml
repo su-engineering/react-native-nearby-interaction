@@ -31,8 +31,10 @@ jobs:
           node-version: 22
           registry-url: https://registry.npmjs.org
       - run: npm install --global npm@11
-      - run: npm ci
-      - run: npm run pack:check
+      - uses: actions/download-artifact@v4
+        with:
+          name: npm-release-candidate
+          path: build/release/
       - name: Publish the verified artifact and create the version tag
         env:
           EXPECTED_VERSION: ${{ inputs.version }}
