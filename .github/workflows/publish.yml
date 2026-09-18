@@ -1,0 +1,40 @@
+name: Publish npm package
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Exact version in package.json to publish
+        required: true
+        default: 0.1.0-beta.1
+permissions: {}
+concurrency:
+  group: npm-publication
+  cancel-in-progress: false
+jobs:
+  validate:
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+  publish:
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - run: npm install --global npm@11
+      - run: npm ci
+      - run: npm run pack:check
+      - name: Publish the verified artifact and create the version tag
+        env:
+          EXPECTED_VERSION: ${{ inputs.version }}
+          REPOSITORY_PRIVATE: ${{ github.event.repository.private }}
+        run: node scripts/publish.cjs

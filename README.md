@@ -4,10 +4,9 @@ iPhone → UWB accessory ranging through Apple's Nearby Interaction framework.
 This standalone MVP has a configurable Truesense T-TAG BLE profile, an external
 transport API for other accessories, a typed event API, and a React hook.
 
-The implementation is ready for native build and device validation. JavaScript
-checks have been run on Linux; Xcode compilation and physical ranging have not
-been run here. See [validation](docs/VALIDATION.md) before treating it as a tested
-hardware library.
+First release candidate: **0.1.0-beta.1**, published under the `next` npm tag when
+released. Physical ranging validation is pending. See [validation](docs/VALIDATION.md)
+for the automated checks and the hardware acceptance procedure.
 
 ## Scope
 
@@ -24,12 +23,21 @@ hardware library.
 | Android, iPhone-to-iPhone, multiple simultaneous tags | Outside this MVP |
 | Background ranging | Outside this MVP; disconnects and resumes in foreground |
 
-Development baseline: React Native 0.83.1, React 19.2, iOS 15.1+. Hardware support
-is checked at runtime; simulators cannot provide physical UWB measurements.
+Compatibility target: React Native 0.83.x (baseline 0.83.1), React 19.2.x,
+Expo SDK 55 (baseline 55.0.0), iOS 15.1+. Other versions are not claimed by this
+beta. Hardware support is checked at runtime; simulators cannot provide physical
+UWB measurements.
 
-## Install locally
+## Installation
 
-Clone the private repository and install locally:
+After the beta is released:
+
+```sh
+npm install @su-engineering/react-native-nearby-interaction@next
+```
+
+Before release, install the tarball produced by `npm run pack:check`, or clone
+the repository and install locally:
 
 ```sh
 npm install /absolute/path/to/react-native-nearby-interaction
@@ -46,7 +54,7 @@ For Expo, add the config plugin and rebuild your native app:
 ```json
 {
   "expo": {
-    "plugins": [["react-native-nearby-interaction", {
+    "plugins": [["@su-engineering/react-native-nearby-interaction", {
       "nearbyInteractionUsageDescription": "Measure your distance to your UWB tag.",
       "bluetoothUsageDescription": "Connect to your UWB tag."
     }]]
@@ -60,13 +68,12 @@ not add background modes. Expo Go cannot load this native module.
 ## Basic usage
 
 ```tsx
-import {nearbyInteraction, useNearbyInteraction} from 'react-native-nearby-interaction';
+import {Text} from 'react-native';
+import {nearbyInteraction, useNearbyInteraction} from '@su-engineering/react-native-nearby-interaction';
 
 function Distance() {
   const {state, measurement, error} = useNearbyInteraction();
-  // Render measurement?.distance; null means unavailable, never zero.
-  // horizontalAngle is radians. direction is Apple's x/y/z vector.
-  return null;
+  return <Text>{error?.message ?? `${state}: ${measurement?.distance ?? '—'} m`}</Text>;
 }
 
 const capabilities = await nearbyInteraction.getCapabilities();
@@ -94,7 +101,7 @@ direction may independently be unavailable.
 ## Configure the accessory profile
 
 ```ts
-import {nearbyInteraction, TTAG_PROFILE} from 'react-native-nearby-interaction';
+import {nearbyInteraction, TTAG_PROFILE} from '@su-engineering/react-native-nearby-interaction';
 
 await nearbyInteraction.start({
   transport: 'ttag',
@@ -145,10 +152,11 @@ await nearbyInteraction.configureAccessory(accessoryConfigBase64, peripheralUUID
 ```
 
 The peer UUID is optional; supply it when using CoreBluetooth. On retry or
-foreground resume the session emits `state: configuring` again; your transport
-must reset/reinitialize the accessory and supply fresh configuration. Register
-that state listener before `start()`. Repeated configuration for an already
-configured session is ignored. `stop()` does not stop your external transport.
+foreground resume, a transition to `configuring` requests fresh negotiation.
+Your transport must reset/reinitialize the accessory and supply its configuration.
+Register that state listener before `start()`. Repeated configuration for an
+already configured session is ignored. Remove subscriptions and close your own
+transport after `stop()`; it only tears down the native NI session in external mode.
 
 No default framing, token discovery, credential transfer, or generic UWB radio
 scanning is implied by external mode. The accessory must implement an
@@ -193,7 +201,7 @@ configured. The example displays capability, state, distance, angle, direction,
 and a bounded event log. Swift protocol tests run with `swift test` on macOS.
 
 See [architecture](docs/ARCHITECTURE.md), [hardware validation](docs/VALIDATION.md),
-and [source lineage](docs/SOURCE.md). The package is unpublished and currently
-marked UNLICENSED; a distribution license must be set before publishing.
-The example retains the official template's MIT
-license in `example/TEMPLATE-LICENSE`.
+and [source lineage](docs/SOURCE.md). This package is MIT licensed; the example
+retains the official template's MIT license in `example/TEMPLATE-LICENSE`.
+See [contributing](CONTRIBUTING.md), [security](SECURITY.md) and the
+[release guide](docs/RELEASING.md).

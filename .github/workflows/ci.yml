@@ -1,10 +1,16 @@
 name: Library checks
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
 permissions:
   contents: read
 jobs:
   javascript:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -12,12 +18,18 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run check
-      - run: npm ci --prefix example
-      - run: npx --no-install react-native bundle --platform ios --entry-file index.js --dev false --bundle-output ../build/example.jsbundle --max-workers 2
-        working-directory: example
+      - run: npm run release:check
+      - uses: actions/upload-artifact@v4
+        with:
+          name: npm-release-candidate
+          path: build/release/
   ios:
     runs-on: macos-15
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        consumer: [react-native, expo]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -26,13 +38,23 @@ jobs:
           cache: npm
       - run: npm ci
       - run: swift test
-      - run: npm ci --prefix example
+      - run: npm run pack:check
+      - run: npm run test:consumer -- ${{ matrix.consumer }}
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
           working-directory: example
           bundler-cache: true
-      - run: bundle exec pod install --project-directory=ios
-        working-directory: example
-      - run: xcodebuild -workspace ios/NearbyInteractionExample.xcworkspace -scheme NearbyInteractionExample -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
-        working-directory: example
+      - name: Install consumer pods
+        env:
+          BUNDLE_GEMFILE: ${{ github.workspace }}/example/Gemfile
+        run: bundle exec pod install --project-directory=build/consumers/${{ matrix.consumer }}/ios
+      - name: Compile tarball consumer for iOS simulator
+        run: |
+          cd build/consumers/${{ matrix.consumer }}
+          if [ '${{ matrix.consumer }}' = 'expo' ]; then
+            app_name=NearbyInteractionPackageTest
+          else
+            app_name=NearbyInteractionExample
+          fi
+          xcodebuild -quiet -workspace "ios/$app_name.xcworkspace" -scheme "$app_name" -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build

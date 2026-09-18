@@ -4,7 +4,7 @@
     "strict": true, "esModuleInterop": true, "skipLibCheck": true,
     "jsx": "react-jsx", "declaration": true, "outDir": "lib",
     "noUncheckedIndexedAccess": true, "exactOptionalPropertyTypes": true,
-    "paths": {"react-native-nearby-interaction": ["./src/index.ts"]}
+    "paths": {"@su-engineering/react-native-nearby-interaction": ["./src/index.ts"]}
   },
   "include": ["src", "tests", "example/App.tsx"]
 }

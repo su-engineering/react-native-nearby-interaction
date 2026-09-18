@@ -6,11 +6,11 @@ Pod::Spec.new do |s|
   s.summary = package['description']
   repository_url = 'https://github.com/su-engineering/react-native-nearby-interaction'
   s.homepage = repository_url
-  s.license = { :type => package['license'] }
-  s.author = 'Nearby Interaction contributors'
+  s.license = { :type => package['license'], :file => 'LICENSE' }
+  s.author = package['author']
   # Local path installation is supported. A CocoaPods release requires a
   # matching version tag and access to the private repository.
-  s.source = { :git => "#{repository_url}.git", :tag => s.version.to_s }
+  s.source = { :git => "#{repository_url}.git", :tag => "v#{s.version}" }
   s.platforms = { :ios => '15.1' }
   s.source_files = 'ios/**/*.{h,m,mm,swift}'
   s.public_header_files = 'ios/RNNearbyInteraction.h'

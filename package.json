@@ -1,11 +1,16 @@
 {
-  "name": "react-native-nearby-interaction",
-  "version": "0.1.0",
+  "name": "@su-engineering/react-native-nearby-interaction",
+  "version": "0.1.0-beta.1",
   "description": "iOS UWB accessory ranging for React Native, with a T-TAG BLE profile and external transports",
-  "license": "UNLICENSED",
-  "repository": {"type": "git", "url": "git+https://github.com/su-engineering/react-native-nearby-interaction.git"},
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/su-engineering/react-native-nearby-interaction.git"
+  },
   "homepage": "https://github.com/su-engineering/react-native-nearby-interaction#readme",
-  "bugs": {"url": "https://github.com/su-engineering/react-native-nearby-interaction/issues"},
+  "bugs": {
+    "url": "https://github.com/su-engineering/react-native-nearby-interaction/issues"
+  },
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "react-native": "src/index.ts",
@@ -19,7 +24,10 @@
     "react-native.config.js",
     "NearbyInteractionKit.podspec",
     "README.md",
-    "docs"
+    "docs",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md"
   ],
   "exports": {
     ".": {
@@ -36,12 +44,16 @@
     "test": "node --import tsx tests/run.ts",
     "codegen": "node scripts/codegen.cjs",
     "check": "npm run typecheck && npm test && npm run build && npm run codegen",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "pack:check": "node scripts/pack.cjs",
+    "test:consumer": "node scripts/consumer.cjs",
+    "release:check": "npm run check && npm run pack:check",
+    "prepublishOnly": "npm run release:check"
   },
   "peerDependencies": {
-    "react": ">=19.0.0",
-    "react-native": ">=0.83.0",
-    "@expo/config-plugins": ">=10.0.0"
+    "react": "~19.2.0",
+    "react-native": "~0.83.1",
+    "@expo/config-plugins": "~55.0.6"
   },
   "peerDependenciesMeta": {
     "@expo/config-plugins": {
@@ -49,7 +61,7 @@
     }
   },
   "devDependencies": {
-    "@expo/config-plugins": "~10.1.2",
+    "@expo/config-plugins": "~55.0.6",
     "@types/react": "^19.2.0",
     "@types/node": "^22.0.0",
     "react": "19.2.0",
@@ -71,5 +83,20 @@
         }
       }
     }
+  },
+  "author": "SU Engineering",
+  "keywords": [
+    "react-native",
+    "nearby-interaction",
+    "uwb",
+    "ultra-wideband",
+    "ios",
+    "truesense",
+    "bluetooth"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "tag": "next",
+    "registry": "https://registry.npmjs.org/"
   }
 }

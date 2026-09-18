@@ -71,7 +71,7 @@ import CoreBluetooth
     do {
       guard active, self.runId == runId else { throw nearbyError("NO_SESSION", "No matching active run") }
       guard options?.transport == "external" else { throw nearbyError("WRONG_TRANSPORT", "Configuration injection requires external transport") }
-      guard !suspended else { throw nearbyError("SESSION_SUSPENDED", "Wait for foreground resume") }
+      guard !suspended, state != "suspended" else { throw nearbyError("SESSION_SUSPENDED", "Wait for session resume") }
       guard let bytes = Data(base64Encoded: data), !bytes.isEmpty, bytes.count <= 65536 else { throw nearbyError("INVALID_DATA", "Expected nonempty base64 configuration") }
       if !peerId.isEmpty && UUID(uuidString: peerId) == nil { throw nearbyError("INVALID_PEER_ID", "Expected a CoreBluetooth UUID") }
       do { try setup(bytes, peerId: UUID(uuidString: peerId)) }
@@ -203,7 +203,12 @@ import CoreBluetooth
     transition("failed")
   }
   private func cancelTimers() { deadline?.cancel(); deadline = nil; recovery?.cancel(); recovery = nil }
-  private func transition(_ newState: String) { state = newState; emit("state", ["state": state]) }
+  private func transition(_ newState: String) {
+    // External transports use configuring as a negotiation request. Repeating
+    // that state while accepting configuration would request another reset.
+    guard state != newState else { return }
+    state = newState; emit("state", ["state": state])
+  }
   private func emit(_ type: String, _ payload: [String: Any]) {
     guard let runId = runId else { return }
     onEvent?(["runId": runId, "type": type, "payload": json(payload)])

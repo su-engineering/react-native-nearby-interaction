@@ -1,0 +1,15 @@
+name: Feature request
+description: Propose an API or accessory integration improvement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and proposed behavior
+      description: Explain why current configuration or external transport cannot handle the use case.
+    validations:
+      required: true
+  - type: textarea
+    id: hardware
+    attributes:
+      label: Hardware and testing
+      description: Relevant devices, firmware, public protocol docs and hardware available for validation.

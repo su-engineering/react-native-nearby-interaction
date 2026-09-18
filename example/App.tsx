@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, SafeAreaView, ScrollView, Text, TextInput, View} from 'react-native';
-import {nearbyInteraction, useNearbyInteraction, type Capabilities} from 'react-native-nearby-interaction';
+import {nearbyInteraction, useNearbyInteraction, type Capabilities} from '@su-engineering/react-native-nearby-interaction';
 
 export default function App() {
   const snapshot = useNearbyInteraction();

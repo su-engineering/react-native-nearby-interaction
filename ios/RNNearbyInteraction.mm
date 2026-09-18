@@ -1,4 +1,5 @@
 #import "RNNearbyInteraction.h"
+#import <NearbyInteraction/NearbyInteraction.h>
 #import "NearbyInteractionKit-Swift.h"
 
 @implementation RNNearbyInteraction {
