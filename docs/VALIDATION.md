@@ -31,7 +31,9 @@ swift test
 npm ci --prefix example
 cd example
 bundle install
-bundle exec pod install --project-directory=ios
+cd ios
+bundle exec pod install
+cd ..
 xcodebuild -workspace ios/NearbyInteractionExample.xcworkspace \
   -scheme NearbyInteractionExample -configuration Debug \
   -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
@@ -73,5 +75,5 @@ For another protocol, validate external mode, including reinitialization on each
 `configuring` event and teardown of the application's own transport.
 
 Keep the first hardware result as a versioned report before marking the MVP
-device-tested or releasing it. Runtime ranging is a measurement, not a peer
+device-tested or promoting it beyond the evaluation beta. Runtime ranging is a measurement, not a peer
 identity or an authorization decision.
