@@ -1,0 +1,27 @@
+name: Hardware validation
+description: Share reproducible results for an iPhone and UWB accessory combination
+body:
+  - type: markdown
+    attributes:
+      value: "Report observed results, including failures and unavailable readings. Remove device identifiers and raw accessory configuration tokens."
+  - type: textarea
+    id: environment
+    attributes:
+      label: Hardware and software
+      description: Package version or commit, iPhone model, iOS, React Native/Expo, accessory model, and firmware revision (or unknown).
+    validations:
+      required: true
+  - type: textarea
+    id: setup
+    attributes:
+      label: Setup and reproduction
+      description: Example app or minimal reproduction, transport/profile changes, and relevant public protocol documentation.
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: Observed results
+      description: Report distance, angle/direction availability, Stop/Start, foreground resume, tag power-cycle, stale-reading cleanup, and any untested checks. Include approximate distances and conditions without claiming calibrated accuracy.
+    validations:
+      required: true
