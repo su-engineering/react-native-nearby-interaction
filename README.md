@@ -4,16 +4,16 @@ iPhone → UWB accessory ranging through Apple's Nearby Interaction framework.
 This standalone MVP has a configurable Truesense T-TAG BLE profile, an external
 transport API for other accessories, a typed event API, and a React hook.
 
-First release candidate: **0.1.0-beta.1**, published under the `next` npm tag when
-released. Physical ranging validation is pending. See [validation](docs/VALIDATION.md)
-for the automated checks and the hardware acceptance procedure.
+Current release: **0.1.0**, published under the `latest` npm tag. Initial physical distance ranging, stop/restart, foreground resume and
+tag reconnection passed on an iPhone 16 Pro with a Truesense T-TAG. See
+[validation](docs/VALIDATION.md) for the evidence and remaining acceptance tests.
 
 ## Scope
 
 | Capability | MVP |
 | --- | --- |
 | iOS UWB accessory sessions | Implemented |
-| Truesense demo firmware handshake | Implemented, requires device validation |
+| Truesense demo firmware handshake | Device-tested with a T-TAG; firmware revision not recorded |
 | Configurable BLE UUIDs and framing bytes | Implemented |
 | Other accessory transports | External configuration and shareable-data API |
 | Nullable distance, horizontal angle, direction vector | Implemented |
@@ -25,15 +25,15 @@ for the automated checks and the hardware acceptance procedure.
 
 Compatibility target: React Native 0.83.x (baseline 0.83.1), React 19.2.x,
 Expo SDK 55 (baseline 55.0.0), iOS 15.1+, Xcode 26.2+ for Expo builds. Other versions are not claimed by this
-beta. Hardware support is checked at runtime; simulators cannot provide physical
+release. Hardware support is checked at runtime; simulators cannot provide physical
 UWB measurements.
 
 ## Installation
 
-After the beta is released:
+Install from npm:
 
 ```sh
-npm install @su-engineering/react-native-nearby-interaction@next
+npm install @su-engineering/react-native-nearby-interaction
 ```
 
 Before release, install the tarball produced by `npm run pack:check`, or clone
@@ -148,10 +148,15 @@ const configSubscription = nearbyInteraction.on('configuration', ({data}) => {
 });
 await nearbyInteraction.start({transport: 'external'});
 // After receiving your accessory's Apple NI configuration:
-await nearbyInteraction.configureAccessory(accessoryConfigBase64, peripheralUUID);
+await nearbyInteraction.configureAccessory(accessoryConfigBase64);
 ```
 
-The peer UUID is optional; supply it when using CoreBluetooth. On retry or
+The peer UUID is optional. Supply it only for an accessory that is Bluetooth
+paired, actively connected, and implements Apple's standard Nearby Interaction
+GATT service and Accessory Configuration Characteristic. A CoreBluetooth
+connection alone does not meet these requirements; omit the UUID for ordinary
+foreground ranging over a vendor transport. The built-in T-TAG transport uses
+the foreground configuration initializer. On retry or
 foreground resume, a transition to `configuring` requests fresh negotiation.
 Your transport must reset/reinitialize the accessory and supply its configuration.
 Register that state listener before `start()`. Repeated configuration for an

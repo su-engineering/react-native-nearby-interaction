@@ -119,7 +119,10 @@ import CoreBluetooth
       guard let self = self, self.channel === channel, self.active, !self.suspended else { return }
       switch TTagProtocol.decode(bytes, rawConfiguration: raw, commands: options.profile.commands) {
       case .configuration(let data):
-        do { try self.setup(data, peerId: channel?.peripheralId) }
+        // A connected vendor BLE transport is not necessarily paired or an
+        // implementation of Apple's standard NI GATT service. Foreground
+        // ranging must use the data-only initializer, which supports both.
+        do { try self.setup(data, peerId: nil) }
         catch { self.fail("NI_INVALID_CONFIGURATION", error.localizedDescription) }
       case .started: break // Radio acknowledgement is not a distance measurement.
       case .stopped:

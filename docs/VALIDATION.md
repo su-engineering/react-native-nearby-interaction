@@ -1,30 +1,31 @@
 # Validation status and hardware test procedure
 
+The [2026-09-21 macOS/device report](validation/2026-09-21.md) records the
+current validation session, fixes, and remaining hardware acceptance.
+
 ## Executed locally
 
 - TypeScript strict checking, including the example UI.
-- 16 JavaScript tests: platform errors, serialized start/stop, listener cleanup,
+- 23 JavaScript tests: platform errors, serialized start/stop, listener cleanup,
   failed-start recovery, late-run callback rejection, nullable/unfiltered readings,
   stale reading expiration, custom profiles/commands, validation, and Expo plist
-  preservation, and cancellation of outstanding BLE writes.
+  preservation, cancellation of outstanding BLE writes, release channel selection,
+  and refusal to publish private repositories, changed archives or existing versions.
 - JavaScript/declaration build and iOS TurboModule schema/binding generation.
 - Example autolinking discovery and app-level codegen.
 - Production iOS JavaScript bundle through Metro.
 - npm package dry run: native files, generated JavaScript/types, codegen source,
   plugin and documentation are included; the wallet and test app are excluded.
-- Verified actual beta tarball installation in fresh React Native 0.83.1 and
+- Verified actual candidate tarball installation in fresh React Native 0.83.1 and
   Expo SDK 55.0.0 consumers (not symlinks), including native autolinking/codegen,
   Expo prebuild/usage descriptions, and production bundles.
 
-## Required on macOS
+## macOS and device builds
 
-The Linux development host has no Swift/Xcode toolchain. Four Swift protocol tests
-passed in macOS CI. The first native adapter build exposed a missing Nearby
-Interaction header import, which has been corrected. The release CI workflow
-compiles fresh React Native and Expo tarball consumers on macOS; check the
-candidate commit's CI result for the native build outcome. Physical device
-behavior remains unverified. A simulator build verifies linking/compilation,
-not UWB behavior.
+Local Swift tests, simulator compilation/startup, signed iPhone compilation and
+physical T-TAG distance ranging have now passed; see the dated report above.
+The release CI workflow also compiles fresh React Native and Expo tarball
+consumers on macOS. A simulator build verifies linking/compilation, not UWB behavior.
 
 ```sh
 swift test
@@ -37,8 +38,20 @@ cd ..
 xcodebuild -workspace ios/NearbyInteractionExample.xcworkspace \
   -scheme NearbyInteractionExample -configuration Debug \
   -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
-  CODE_SIGNING_ALLOWED=NO build
+CODE_SIGNING_ALLOWED=NO build
 ```
+
+The example supports a `--diagnostics` launch argument. This mirrors React Native
+logs to standard error and keeps the screen awake for that process. For a signed,
+installed example, capture its sampled state/measurement log with:
+
+```sh
+xcrun devicectl device process launch --device "Your iPhone" --console \
+  --terminate-existing your.example.bundle.identifier --diagnostics
+```
+
+The library itself does not print per-reading diagnostics. Temporary native
+instrumentation used during investigation is not included in the package.
 
 ## Physical device acceptance
 
@@ -75,5 +88,5 @@ For another protocol, validate external mode, including reinitialization on each
 `configuring` event and teardown of the application's own transport.
 
 Keep the first hardware result as a versioned report before marking the MVP
-device-tested or promoting it beyond the evaluation beta. Runtime ranging is a measurement, not a peer
+device-tested or extending its compatibility claims. Runtime ranging is a measurement, not a peer
 identity or an authorization decision.

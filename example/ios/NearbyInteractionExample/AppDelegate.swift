@@ -14,6 +14,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
+    if ProcessInfo.processInfo.arguments.contains("--diagnostics") {
+      UIApplication.shared.isIdleTimerDisabled = true
+      RCTAddLogFunction { _, _, _, _, message in
+        FileHandle.standardError.write(Data("[ReactNative] \(message ?? "")\n".utf8))
+      }
+    }
     let delegate = ReactNativeDelegate()
     let factory = RCTReactNativeFactory(delegate: delegate)
     delegate.dependencyProvider = RCTAppDependencyProvider()

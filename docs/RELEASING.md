@@ -1,8 +1,8 @@
-# First beta release
+# First release
 
-Package: `@su-engineering/react-native-nearby-interaction@0.1.0-beta.1`.
+Package: `@su-engineering/react-native-nearby-interaction@0.1.0`.
 GitHub: `su-engineering/react-native-nearby-interaction`.
-License: MIT. npm dist-tag: `next`. Git tag: `v0.1.0-beta.1`.
+License: MIT. npm dist-tag: `latest`. Git tag: `v0.1.0`.
 
 ## Release candidate checks
 
@@ -18,9 +18,10 @@ iOS simulator. The tarball check verifies required files, excludes the source
 wallet/test harness, and writes `build/release/manifest.json` and `SHA256SUMS`.
 The exact candidate is uploaded as the `npm-release-candidate` CI artifact.
 
-Hardware tests have been intentionally deferred by the maintainer. This beta
-must retain the explicit physical-validation-pending statement until the result
-is recorded. A simulator compile does not prove UWB negotiation/ranging.
+Initial hardware validation is recorded in [the 2026-09-21 report](validation/2026-09-21.md).
+Retain its limitations in the release notes: one iPhone/T-TAG combination,
+unrecorded firmware revision, distance-only observations and an incomplete
+hardware acceptance matrix. A simulator compile does not prove UWB ranging.
 
 ## npm organization setup
 
@@ -34,7 +35,7 @@ and the candidate is reviewed:
 
 ```sh
 npm login
-npm publish ./build/release/su-engineering-react-native-nearby-interaction-0.1.0-beta.1.tgz --access public --tag next
+npm publish ./build/release/su-engineering-react-native-nearby-interaction-0.1.0.tgz --access public --tag latest
 ```
 
 Then configure **Trusted Publisher** in the package's npm settings:
@@ -57,19 +58,18 @@ npm trust github @su-engineering/react-native-nearby-interaction --file publish.
 The workflow is manual, waits for all automated checks, verifies the version and tarball
 integrity, checks that the repository is public and the npm version is absent,
 then publishes with OIDC/provenance, creates the matching Git tag and publishes
-the matching GitHub prerelease with the verified archive and checksum.
+the matching GitHub release with the verified archive and checksum.
 
 Do not run the automated publication for a version already manually published.
 For that bootstrap version, verify the registry artifact before creating/pushing
-its Git tag and publishing the matching GitHub prerelease. Later beta versions
+its Git tag and publishing the matching GitHub release. Later versions
 can use the workflow directly.
 
 ## Public repository and release
 
 Review source/history and retained notices before changing visibility. Enable
-GitHub private vulnerability reporting once public. Create a GitHub prerelease
-with the changelog and the physical-validation-pending statement. Keep the first
-beta on `next`; do not move it to `latest` while evaluation is ongoing.
+GitHub private vulnerability reporting once public. Create a GitHub release
+with the changelog and the recorded hardware-validation scope. Regular versions publish on `latest`; prerelease versions use `next`.
 
 Update package version, root lockfile, example lockfile and changelog together
 for subsequent releases. The podspec source tag tracks `v<package version>`.

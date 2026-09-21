@@ -17,3 +17,5 @@ gem 'bigdecimal'
 gem 'logger'
 gem 'benchmark'
 gem 'mutex_m'
+# CFPropertyList uses kconv, provided by nkf on Ruby 3.4 and newer.
+gem 'nkf'
