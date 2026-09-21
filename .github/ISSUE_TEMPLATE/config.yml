@@ -1,7 +1,7 @@
 blank_issues_enabled: true
 contact_links:
   - name: Troubleshooting and setup
-    url: https://github.com/su-engineering/react-native-nearby-interaction/blob/main/docs/TROUBLESHOOTING.md
+    url: https://github.com/su-engineering/react-native-nearby-interaction/blob/master/docs/TROUBLESHOOTING.md
     about: Check common discovery, configuration, and measurement problems.
   - name: Report a security vulnerability privately
     url: https://github.com/su-engineering/react-native-nearby-interaction/security/advisories/new
