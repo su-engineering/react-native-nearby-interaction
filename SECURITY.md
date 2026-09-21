@@ -1,9 +1,9 @@
 # Security
 
-Only the latest published beta receives fixes during the pre-1.0 period.
+Only the latest published release receives fixes during the pre-1.0 period.
 
-Use GitHub's private **Report a vulnerability** feature when available. Otherwise,
-open an issue requesting a private reporting channel without exploit details.
+[Report a vulnerability privately](https://github.com/su-engineering/react-native-nearby-interaction/security/advisories/new)
+through GitHub Security Advisories. Do not include exploit details in public issues.
 Include version, affected path, impact and reproduction, with real credentials
 and private accessory tokens removed.
 
