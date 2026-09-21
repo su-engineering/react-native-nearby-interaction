@@ -1,6 +1,6 @@
 {
   "name": "@su-engineering/react-native-nearby-interaction",
-  "version": "0.1.0-beta.1",
+  "version": "0.1.0",
   "description": "iOS UWB accessory ranging for React Native, with a T-TAG BLE profile and external transports",
   "license": "MIT",
   "repository": {
@@ -96,7 +96,7 @@
   ],
   "publishConfig": {
     "access": "public",
-    "tag": "next",
+    "tag": "latest",
     "registry": "https://registry.npmjs.org/"
   }
 }

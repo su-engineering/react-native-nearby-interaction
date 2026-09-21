@@ -4,8 +4,7 @@ iPhone → UWB accessory ranging through Apple's Nearby Interaction framework.
 This standalone MVP has a configurable Truesense T-TAG BLE profile, an external
 transport API for other accessories, a typed event API, and a React hook.
 
-First release candidate: **0.1.0-beta.1**, published under the `next` npm tag when
-released. Initial physical distance ranging, stop/restart, foreground resume and
+Current release: **0.1.0**, published under the `latest` npm tag. Initial physical distance ranging, stop/restart, foreground resume and
 tag reconnection passed on an iPhone 16 Pro with a Truesense T-TAG. See
 [validation](docs/VALIDATION.md) for the evidence and remaining acceptance tests.
 
@@ -26,15 +25,15 @@ tag reconnection passed on an iPhone 16 Pro with a Truesense T-TAG. See
 
 Compatibility target: React Native 0.83.x (baseline 0.83.1), React 19.2.x,
 Expo SDK 55 (baseline 55.0.0), iOS 15.1+, Xcode 26.2+ for Expo builds. Other versions are not claimed by this
-beta. Hardware support is checked at runtime; simulators cannot provide physical
+release. Hardware support is checked at runtime; simulators cannot provide physical
 UWB measurements.
 
 ## Installation
 
-After the beta is released:
+Install from npm:
 
 ```sh
-npm install @su-engineering/react-native-nearby-interaction@next
+npm install @su-engineering/react-native-nearby-interaction
 ```
 
 Before release, install the tarball produced by `npm run pack:check`, or clone

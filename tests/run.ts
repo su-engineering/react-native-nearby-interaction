@@ -4,3 +4,4 @@ import './client.test';
 import './validation.test';
 import './plugin.test';
 import './write-cancellation.test';
+import './publish.test';

@@ -6,16 +6,17 @@ current validation session, fixes, and remaining hardware acceptance.
 ## Executed locally
 
 - TypeScript strict checking, including the example UI.
-- 16 JavaScript tests: platform errors, serialized start/stop, listener cleanup,
+- 23 JavaScript tests: platform errors, serialized start/stop, listener cleanup,
   failed-start recovery, late-run callback rejection, nullable/unfiltered readings,
   stale reading expiration, custom profiles/commands, validation, and Expo plist
-  preservation, and cancellation of outstanding BLE writes.
+  preservation, cancellation of outstanding BLE writes, release channel selection,
+  and refusal to publish private repositories, changed archives or existing versions.
 - JavaScript/declaration build and iOS TurboModule schema/binding generation.
 - Example autolinking discovery and app-level codegen.
 - Production iOS JavaScript bundle through Metro.
 - npm package dry run: native files, generated JavaScript/types, codegen source,
   plugin and documentation are included; the wallet and test app are excluded.
-- Verified actual beta tarball installation in fresh React Native 0.83.1 and
+- Verified actual candidate tarball installation in fresh React Native 0.83.1 and
   Expo SDK 55.0.0 consumers (not symlinks), including native autolinking/codegen,
   Expo prebuild/usage descriptions, and production bundles.
 
@@ -87,5 +88,5 @@ For another protocol, validate external mode, including reinitialization on each
 `configuring` event and teardown of the application's own transport.
 
 Keep the first hardware result as a versioned report before marking the MVP
-device-tested or promoting it beyond the evaluation beta. Runtime ranging is a measurement, not a peer
+device-tested or extending its compatibility claims. Runtime ranging is a measurement, not a peer
 identity or an authorization decision.

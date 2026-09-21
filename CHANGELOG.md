@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.1.0-beta.1
+## 0.1.0
 
-First beta of the iOS UWB accessory library. Initial distance ranging and recovery
+First release of the iOS UWB accessory library. Initial distance ranging and recovery
 were validated on an iPhone 16 Pro / iOS 27.0 with a Truesense T-TAG. See
 [the validation report](docs/validation/2026-09-21.md) for the tested scope.
 
