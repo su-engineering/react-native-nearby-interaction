@@ -1,6 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Button, SafeAreaView, ScrollView, Text, TextInput, View} from 'react-native';
+import {Button, PlatformColor, SafeAreaView, ScrollView, Text as NativeText, TextInput, View, type TextProps} from 'react-native';
 import {nearbyInteraction, useNearbyInteraction, type Capabilities} from '@su-engineering/react-native-nearby-interaction';
+
+function Text({style, ...props}: TextProps) {
+  return <NativeText {...props} style={[{color: PlatformColor('label')}, style]} />;
+}
 
 export default function App() {
   const snapshot = useNearbyInteraction();
@@ -11,11 +15,24 @@ export default function App() {
   useEffect(() => {
     let mounted = true;
     nearbyInteraction.getCapabilities().then(value => {if (mounted) setCapabilities(value);}).catch(error => {if (mounted) setMessage(String(error));});
-    const record = (line: string) => setLog(lines => [line, ...lines].slice(0, 30));
+    const record = (line: string) => {
+      const entry = `${new Date().toISOString()} ${line}`;
+      console.info(`[NearbyInteractionExample] ${entry}`);
+      setLog(lines => [entry, ...lines].slice(0, 30));
+    };
+    let lastMeasurementLog = 0;
     const subscriptions = [
       nearbyInteraction.on('state', event => record(`State: ${event.state}`)),
       nearbyInteraction.on('error', event => record(`${event.code}: ${event.message}`)),
       nearbyInteraction.on('connected', event => record(`Connected: ${event.name} (${event.id})`)),
+      nearbyInteraction.on('disconnected', event => record(`Disconnected: ${event.reason}`)),
+      nearbyInteraction.on('measurement', event => {
+        const now = Date.now();
+        if (now - lastMeasurementLog < 1000) return;
+        lastMeasurementLog = now;
+        // Keep a bounded, sampled diagnostic trail without logging opaque data.
+        record(`Measurement: ${JSON.stringify(event)}`);
+      }),
       nearbyInteraction.on('data', event => record(`${event.source}: ${event.data.length} base64 characters`)),
     ];
     return () => {mounted = false; subscriptions.forEach(subscription => subscription.remove()); void nearbyInteraction.stop().catch(console.error);};
@@ -29,12 +46,12 @@ export default function App() {
   };
   const stop = async () => {try {await nearbyInteraction.stop();} catch (error) {setMessage(String(error));}};
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: PlatformColor('systemBackground')}}>
       <ScrollView contentContainerStyle={{padding: 24, gap: 16}}>
         <Text accessibilityRole="header" style={{fontSize: 26, fontWeight: '600'}}>Nearby Interaction</Text>
         <Text>Truesense T-TAG demo · iPhone → UWB accessory</Text>
         <Text>UWB: {capabilities === null ? 'Checking…' : capabilities.supported ? 'Supported' : 'Unavailable'}</Text>
-        <TextInput accessibilityLabel="Optional peripheral UUID" placeholder="Peripheral UUID (optional)" autoCapitalize="none" autoCorrect={false} value={deviceId} onChangeText={setDeviceId} style={{borderWidth: 1, borderColor: '#888', padding: 12, borderRadius: 6}} />
+        <TextInput accessibilityLabel="Optional peripheral UUID" placeholder="Peripheral UUID (optional)" placeholderTextColor={PlatformColor('secondaryLabel')} autoCapitalize="none" autoCorrect={false} value={deviceId} onChangeText={setDeviceId} style={{color: PlatformColor('label'), borderWidth: 1, borderColor: PlatformColor('separator'), padding: 12, borderRadius: 6}} />
         <View style={{flexDirection: 'row', gap: 16}}>
           <Button title="Start" onPress={() => {void start();}} disabled={!capabilities?.supported || !['idle', 'failed'].includes(snapshot.state)} />
           <Button title="Stop / reset" onPress={() => {void stop();}} />

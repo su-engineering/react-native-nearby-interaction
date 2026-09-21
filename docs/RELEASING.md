@@ -18,9 +18,10 @@ iOS simulator. The tarball check verifies required files, excludes the source
 wallet/test harness, and writes `build/release/manifest.json` and `SHA256SUMS`.
 The exact candidate is uploaded as the `npm-release-candidate` CI artifact.
 
-Hardware tests have been intentionally deferred by the maintainer. This beta
-must retain the explicit physical-validation-pending statement until the result
-is recorded. A simulator compile does not prove UWB negotiation/ranging.
+Initial hardware validation is recorded in [the 2026-09-21 report](validation/2026-09-21.md).
+Retain its limitations in the beta release notes: one iPhone/T-TAG combination,
+unrecorded firmware revision, distance-only observations and an incomplete
+hardware acceptance matrix. A simulator compile does not prove UWB ranging.
 
 ## npm organization setup
 
@@ -68,7 +69,7 @@ can use the workflow directly.
 
 Review source/history and retained notices before changing visibility. Enable
 GitHub private vulnerability reporting once public. Create a GitHub prerelease
-with the changelog and the physical-validation-pending statement. Keep the first
+with the changelog and the recorded hardware-validation scope. Keep the first
 beta on `next`; do not move it to `latest` while evaluation is ongoing.
 
 Update package version, root lockfile, example lockfile and changelog together
